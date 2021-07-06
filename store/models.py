@@ -38,6 +38,7 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('store:product_detail', args=[self.slug]) # Al ver en urls.py tenemos que app_name=store y en views.py, la vista se llama con name=product_detail en la url
+        
     def __str__(self):
         return self.title
 
