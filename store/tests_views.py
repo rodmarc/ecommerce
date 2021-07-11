@@ -1,12 +1,10 @@
 from unittest import skip
 from django.http.request import HttpRequest
 
-from django.test import TestCase
-
 from django.contrib.auth.models import User
 
 from django.http import HttpRequest
-from django.test import Client # Para simular la prueba con un usuario
+from django.test import Client, RequestFactory, TestCase # Para simular la prueba más avanzada 
 from django.urls import reverse
 
 from store.models import Category, Product
@@ -28,6 +26,7 @@ class TestSkip(TestCase):
 class TestViewResponses(TestCase):
     def setUp(self):
         self.c = Client()
+        self.factory = RequestFactory()
 
         # Se crea datos para probar
         user = User.objects.create(username='admin')
@@ -68,6 +67,14 @@ class TestViewResponses(TestCase):
         response = all_products(request)
         html = response.content.decode('utf8')
         print(html)
+        self.assertIn('<title>Home</title>', html) # Probamos si el html devuelto tiene, por ejemplo el titulo segun lo programamos
+        self.assertTrue(html.startswith('\n<!DOCTYPE html>\n'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_function(self):
+        request = self.factory.get('/item/django-beginners')
+        response = all_products(request)
+        html = response.content.decode('utf8')
         self.assertIn('<title>Home</title>', html) # Probamos si el html devuelto tiene, por ejemplo el titulo segun lo programamos
         self.assertTrue(html.startswith('\n<!DOCTYPE html>\n'))
         self.assertEqual(response.status_code, 200)
